@@ -22,9 +22,17 @@ export default function Vote() {
       return;
     }
     
-    if (localStorage.getItem(`purivision_voted_${uuid}`)) {
-      setVoted(true);
-    }
+    // Request source of truth from server
+    socket.emit('request_initial_state', uuid);
+
+    const onInitialState = (data) => {
+      setStateData(prev => ({ ...prev, isVotingOpen: data.isVotingOpen, songs: data.songs }));
+      setVoted(data.hasVoted);
+      setIsLoaded(true);
+      if (type === 'judge' && data.songs && data.songs.length > 0) {
+        setJudgeOrder(prev => prev.length === 0 ? data.songs : prev);
+      }
+    };
 
     const onStateUpdate = (data) => {
       setStateData(prev => ({ ...prev, ...data }));
@@ -43,11 +51,13 @@ export default function Vote() {
       setVoted(false);
     };
 
+    socket.on('initial_state', onInitialState);
     socket.on('stateUpdate', onStateUpdate);
     socket.on('config_update', onConfigUpdate);
     socket.on('votes_reset', onVotesReset);
     
     return () => {
+      socket.off('initial_state', onInitialState);
       socket.off('stateUpdate', onStateUpdate);
       socket.off('config_update', onConfigUpdate);
       socket.off('votes_reset', onVotesReset);
@@ -58,7 +68,6 @@ export default function Vote() {
     socket.emit('submitVote', { uuid, type, groupId, songId }, (res) => {
       if (res.success) {
         setVoted(true);
-        localStorage.setItem(`purivision_voted_${uuid}`, 'true');
       } else {
         setError(res.error);
       }
@@ -69,7 +78,6 @@ export default function Vote() {
     socket.emit('submitVote', { uuid, type, groupId, order: judgeOrder.map(s => s.id) }, (res) => {
       if (res.success) {
         setVoted(true);
-        localStorage.setItem(`purivision_voted_${uuid}`, 'true');
       } else {
         setError(res.error);
       }

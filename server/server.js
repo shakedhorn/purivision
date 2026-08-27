@@ -161,6 +161,15 @@ io.on('connection', (socket) => {
     pointsArray: state.points
   });
 
+  socket.on('request_initial_state', (userId) => {
+    socket.emit('initial_state', {
+      isVotingOpen: state.isVotingOpen,
+      songs: state.songs,
+      pointsArray: state.points,
+      hasVoted: !!state.votes[userId]
+    });
+  });
+
   socket.on('submitVote', (voteData, callback) => {
     if (state.isCalculated) {
       return callback({ success: false, error: 'ההצבעה הסתיימה' });
