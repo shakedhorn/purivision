@@ -9,6 +9,7 @@ export default function Vote() {
   const [judgeOrder, setJudgeOrder] = useState([]);
   const [voted, setVoted] = useState(false);
   const [error, setError] = useState('');
+  const [isLoaded, setIsLoaded] = useState(false);
   const navigate = useNavigate();
 
   const type = localStorage.getItem('purivision_type');
@@ -31,17 +32,25 @@ export default function Vote() {
 
     const onConfigUpdate = (data) => {
       setStateData(prev => ({ ...prev, isVotingOpen: data.isVotingOpen, songs: data.songs }));
+      setIsLoaded(true);
       if (type === 'judge' && data.songs && data.songs.length > 0) {
         setJudgeOrder(prev => prev.length === 0 ? data.songs : prev);
       }
     };
 
+    const onVotesReset = () => {
+      localStorage.removeItem(`purivision_voted_${uuid}`);
+      setVoted(false);
+    };
+
     socket.on('stateUpdate', onStateUpdate);
     socket.on('config_update', onConfigUpdate);
+    socket.on('votes_reset', onVotesReset);
     
     return () => {
       socket.off('stateUpdate', onStateUpdate);
       socket.off('config_update', onConfigUpdate);
+      socket.off('votes_reset', onVotesReset);
     };
   }, [navigate, type, groupId, uuid]);
 
@@ -66,6 +75,10 @@ export default function Vote() {
       }
     });
   };
+
+  if (!isLoaded) {
+    return <div className="min-h-screen bg-slate-900 flex items-center justify-center text-white"><div className="text-xl font-semibold">מתחבר לשרת...</div></div>;
+  }
 
   if (!stateData.isVotingOpen || stateData.isCalculated) {
     return <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center text-center p-4">

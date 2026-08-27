@@ -236,6 +236,7 @@ io.on('connection', (socket) => {
       io.emit('stateUpdate', { results: null, isCalculated: false, isVotingOpen: false });
       io.emit('config_update', { isVotingOpen: false, songs: state.songs, pointsArray: state.points });
       io.emit('statsUpdate', { totalVotes: 0 });
+      io.emit('votes_reset');
       callback({ success: true });
     }
   });
