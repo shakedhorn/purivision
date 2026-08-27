@@ -6,9 +6,8 @@ import { GripVertical } from 'lucide-react';
 
 export default function Vote() {
   const [stateData, setStateData] = useState({ songs: [], isCalculated: false, isVotingOpen: false });
-  const [judgeOrder, setJudgeOrder] = useState([]);
+  const [orderedSongs, setOrderedSongs] = useState([]);
   const [voted, setVoted] = useState(false);
-  const [error, setError] = useState('');
   const [isLoaded, setIsLoaded] = useState(false);
   const navigate = useNavigate();
 
@@ -29,9 +28,6 @@ export default function Vote() {
       setStateData(prev => ({ ...prev, isVotingOpen: data.isVotingOpen, songs: data.songs }));
       setVoted(data.hasVoted);
       setIsLoaded(true);
-      if (type === 'judge' && data.songs && data.songs.length > 0) {
-        setJudgeOrder(prev => prev.length === 0 ? data.songs : prev);
-      }
     };
 
     const onStateUpdate = (data) => {
@@ -41,47 +37,57 @@ export default function Vote() {
     const onConfigUpdate = (data) => {
       setStateData(prev => ({ ...prev, isVotingOpen: data.isVotingOpen, songs: data.songs }));
       setIsLoaded(true);
-      if (type === 'judge' && data.songs && data.songs.length > 0) {
-        setJudgeOrder(prev => prev.length === 0 ? data.songs : prev);
-      }
     };
 
     const onVotesReset = () => {
-      localStorage.removeItem(`purivision_voted_${uuid}`);
-      setVoted(false);
+      // Hard reset the client session
+      localStorage.clear();
+      navigate('/');
+    };
+
+    const onVoteSuccess = () => {
+      setVoted(true);
+    };
+
+    const onVoteError = (msg) => {
+      alert(msg);
     };
 
     socket.on('initial_state', onInitialState);
     socket.on('stateUpdate', onStateUpdate);
     socket.on('config_update', onConfigUpdate);
     socket.on('votes_reset', onVotesReset);
+    socket.on('vote_success', onVoteSuccess);
+    socket.on('vote_error', onVoteError);
     
     return () => {
       socket.off('initial_state', onInitialState);
       socket.off('stateUpdate', onStateUpdate);
       socket.off('config_update', onConfigUpdate);
       socket.off('votes_reset', onVotesReset);
+      socket.off('vote_success', onVoteSuccess);
+      socket.off('vote_error', onVoteError);
     };
   }, [navigate, type, groupId, uuid]);
 
+  // Synchronize orderedSongs strictly with the socket's songs list
+  useEffect(() => {
+    if (stateData.songs && stateData.songs.length > 0) {
+      setOrderedSongs(stateData.songs);
+    }
+  }, [stateData.songs]);
+
   const submitAudienceVote = (songId) => {
-    socket.emit('submitVote', { uuid, type, groupId, songId }, (res) => {
-      if (res.success) {
-        setVoted(true);
-      } else {
-        setError(res.error);
-      }
-    });
+    socket.emit('submit_vote', { uuid, type, groupId, songId });
   };
 
-  const submitJudgeVote = () => {
-    socket.emit('submitVote', { uuid, type, groupId, order: judgeOrder.map(s => s.id) }, (res) => {
-      if (res.success) {
-        setVoted(true);
-      } else {
-        setError(res.error);
-      }
-    });
+  const handleVoteSubmit = () => {
+    if (orderedSongs.length !== stateData.songs.length) {
+      alert('שגיאה: רשימת השירים לא תואמת. נסה לרענן את העמוד.');
+      return;
+    }
+
+    socket.emit('submit_vote', { uuid, type, groupId, order: orderedSongs.map(s => s.id) });
   };
 
   if (!isLoaded) {
@@ -108,8 +114,6 @@ export default function Vote() {
     <div className="min-h-screen bg-slate-900 p-4 max-w-lg mx-auto text-white font-sans">
       <h2 className="text-3xl font-bold mb-2 text-center text-purple-400">הצבע לשיר המועדף עליך</h2>
       <p className="text-center text-slate-400 mb-6 font-semibold uppercase tracking-wider">{type === 'audience' ? `כיתה: ${groupId}` : `שופט: ${groupId}`}</p>
-      
-      {error && <div className="bg-red-500/20 border border-red-500 text-red-400 p-4 rounded-xl mb-6 text-center font-semibold">{error}</div>}
 
       {type === 'audience' ? (
         <div className="space-y-4">
@@ -129,8 +133,8 @@ export default function Vote() {
           <p className="text-slate-300 mb-6 text-center bg-slate-800 p-4 rounded-xl border border-slate-700">
             גרור ושחרר כדי לדרג את השירים. השיר העליון מקבל את מירב הנקודות.
           </p>
-          <Reorder.Group axis="y" values={judgeOrder} onReorder={setJudgeOrder} className="space-y-3">
-            {judgeOrder.map((song, index) => (
+          <Reorder.Group axis="y" values={orderedSongs} onReorder={setOrderedSongs} className="space-y-3">
+            {orderedSongs.map((song, index) => (
               <Reorder.Item key={song.id} value={song} className="bg-slate-800 p-4 rounded-xl flex items-center shadow-lg border border-slate-700 cursor-grab active:cursor-grabbing">
                 <div className="ml-4 text-2xl font-black text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-pink-500 w-8 text-center">{index + 1}</div>
                 <div className="flex-1">
@@ -142,8 +146,8 @@ export default function Vote() {
             ))}
           </Reorder.Group>
           <button 
-            onClick={submitJudgeVote}
-            className="w-full mt-8 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 transition p-4 rounded-xl font-bold text-xl shadow-lg"
+            onClick={handleVoteSubmit}
+            className="w-full mt-8 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 transition p-4 rounded-xl font-bold text-xl shadow-lg cursor-pointer"
           >
             שלח דירוג
           </button>

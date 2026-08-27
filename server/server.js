@@ -51,7 +51,7 @@ function saveState() {
 }
 
 function calculateResults() {
-  const { songs, points, votes, judgeCodes } = state;
+  const { songs, points, votes } = state;
   let scores = {};
 
   songs.forEach(s => {
@@ -61,14 +61,16 @@ function calculateResults() {
 
   // Process judges
   Object.values(votes).forEach(vote => {
-    if (vote.type === 'judge') {
+    if (vote && vote.type === 'judge') {
       const order = vote.order;
       order.forEach((songId, index) => {
         if (index < points.length && scores[songId]) {
           const p = points[index];
-          scores[songId].total += p;
-          scores[songId].frequencies[p] = (scores[songId].frequencies[p] || 0) + 1;
-          scores[songId].groups.add(vote.groupId);
+          if (p > 0) {
+            scores[songId].total += p;
+            scores[songId].frequencies[p] = (scores[songId].frequencies[p] || 0) + 1;
+            scores[songId].groups.add(vote.groupId);
+          }
         }
       });
     }
@@ -81,7 +83,7 @@ function calculateResults() {
 
     let votersInClass = 0;
     Object.values(votes).forEach(vote => {
-      if (vote.type === 'audience' && vote.groupId === className) {
+      if (vote && vote.type === 'audience' && vote.groupId === className) {
         if(classVotes[vote.songId] !== undefined) {
             classVotes[vote.songId]++;
             votersInClass++;
@@ -107,9 +109,11 @@ function calculateResults() {
           const p = points[rankIndex];
           tiedSongs.forEach(songId => {
             if(scores[songId]) {
-                scores[songId].total += p;
-                scores[songId].frequencies[p] = (scores[songId].frequencies[p] || 0) + 1;
-                scores[songId].groups.add(className);
+                if (p > 0) {
+                    scores[songId].total += p;
+                    scores[songId].frequencies[p] = (scores[songId].frequencies[p] || 0) + 1;
+                    scores[songId].groups.add(className);
+                }
             }
           });
         }
@@ -158,7 +162,8 @@ io.on('connection', (socket) => {
   socket.emit('config_update', {
     isVotingOpen: state.isVotingOpen,
     songs: state.songs,
-    pointsArray: state.points
+    pointsArray: state.points,
+    judgeCodes: state.judgeCodes
   });
 
   socket.on('request_initial_state', (userId) => {
@@ -170,47 +175,68 @@ io.on('connection', (socket) => {
     });
   });
 
-  socket.on('submitVote', (voteData, callback) => {
+  socket.on('submit_vote', (voteData) => {
     if (state.isCalculated) {
-      return callback({ success: false, error: 'ההצבעה הסתיימה' });
+      return socket.emit('vote_error', 'ההצבעה הסתיימה');
     }
     if (!state.isVotingOpen) {
-      return callback({ success: false, error: 'ההצבעה טרם נפתחה' });
+      return socket.emit('vote_error', 'ההצבעה סגורה');
     }
     if (state.songs.length === 0) {
-      return callback({ success: false, error: 'אין שירים מוגדרים' });
+      return socket.emit('vote_error', 'אין שירים מוגדרים');
     }
 
     const { uuid, type, groupId, songId, order } = voteData;
     
     if (type === 'judge') {
-      if (!state.judgeCodes.includes(groupId)) {
-        return callback({ success: false, error: 'קוד שופט לא חוקי' });
+      const cleanCode = groupId.trim().toUpperCase();
+      
+      if (!state.judgeCodes.includes(cleanCode)) {
+        return socket.emit('vote_error', 'קוד שופט אינו תקין');
       }
-      state.votes[uuid] = { type, groupId, order };
+      
+      if (state.votes[cleanCode] || state.votes[uuid]) {
+        return socket.emit('vote_error', 'מכשיר זה או שופט זה כבר הצביעו');
+      }
+      
+      if (!order || order.length !== state.songs.length) {
+        return socket.emit('vote_error', 'רשימת השירים חסרה או פגומה');
+      }
+      
+      state.votes[uuid] = { type, groupId: cleanCode, order };
+      state.votes[cleanCode] = true; // Mark as voted to prevent double voting
     } else if (type === 'audience') {
       if (!VALID_CLASSES.includes(groupId)) {
-        return callback({ success: false, error: 'כיתה לא חוקית' });
+        return socket.emit('vote_error', 'כיתה לא חוקית');
+      }
+      if (state.votes[uuid]) {
+         return socket.emit('vote_error', 'מכשיר זה כבר הצביע');
       }
       state.votes[uuid] = { type, groupId, songId };
     } else {
-      return callback({ success: false, error: 'סוג הצבעה לא חוקי' });
+      return socket.emit('vote_error', 'סוג הצבעה לא חוקי');
     }
 
     saveState();
-    callback({ success: true });
+    socket.emit('vote_success');
+    
+    let actualVotesCount = 0;
+    Object.values(state.votes).forEach(v => {
+        if (v && v.type) actualVotesCount++; // only count full objects, not 'true' markers
+    });
     
     io.emit('statsUpdate', {
-      totalVotes: Object.keys(state.votes).length
+      totalVotes: actualVotesCount
     });
   });
 
   socket.on('admin_update_config', (data, callback) => {
     state.songs = data.songs;
     state.points = data.points;
+    if (data.judgeCodes) state.judgeCodes = data.judgeCodes;
     saveState();
     io.emit('stateUpdate', { songs: state.songs, points: state.points });
-    io.emit('config_update', { isVotingOpen: state.isVotingOpen, songs: state.songs, pointsArray: state.points });
+    io.emit('config_update', { isVotingOpen: state.isVotingOpen, songs: state.songs, pointsArray: state.points, judgeCodes: state.judgeCodes });
     callback({ success: true });
   });
 
@@ -218,7 +244,7 @@ io.on('connection', (socket) => {
     state.isVotingOpen = !state.isVotingOpen;
     saveState();
     io.emit('stateUpdate', { isVotingOpen: state.isVotingOpen });
-    io.emit('config_update', { isVotingOpen: state.isVotingOpen, songs: state.songs, pointsArray: state.points });
+    io.emit('config_update', { isVotingOpen: state.isVotingOpen, songs: state.songs, pointsArray: state.points, judgeCodes: state.judgeCodes });
     callback({ success: true, isVotingOpen: state.isVotingOpen });
   });
 
@@ -234,16 +260,21 @@ io.on('connection', (socket) => {
       state.isVotingOpen = false;
       saveState();
       io.emit('stateUpdate', { results: state.results, isCalculated: true, isVotingOpen: false });
-      io.emit('config_update', { isVotingOpen: false, songs: state.songs, pointsArray: state.points });
+      io.emit('config_update', { isVotingOpen: false, songs: state.songs, pointsArray: state.points, judgeCodes: state.judgeCodes });
       callback({ success: true });
     } else if (action.type === 'reset') {
       state.votes = {};
       state.results = null;
       state.isCalculated = false;
       state.isVotingOpen = false;
+      
+      const codes = Array.from({length: 10}, () => Math.random().toString(36).substring(2, 8).toUpperCase());
+      state.judgeCodes = codes;
+      
       saveState();
       io.emit('stateUpdate', { results: null, isCalculated: false, isVotingOpen: false });
-      io.emit('config_update', { isVotingOpen: false, songs: state.songs, pointsArray: state.points });
+      io.emit('config_update', { isVotingOpen: false, songs: state.songs, pointsArray: state.points, judgeCodes: state.judgeCodes });
+      
       io.emit('statsUpdate', { totalVotes: 0 });
       io.emit('votes_reset');
       callback({ success: true });
@@ -251,9 +282,13 @@ io.on('connection', (socket) => {
   });
 
   socket.on('getAdminData', (data, callback) => {
+      let actualVotesCount = 0;
+      Object.values(state.votes).forEach(v => {
+          if (v && v.type) actualVotesCount++;
+      });
       callback({
           judgeCodes: state.judgeCodes,
-          totalVotes: Object.keys(state.votes).length,
+          totalVotes: actualVotesCount,
           points: state.points,
           songs: state.songs,
           isVotingOpen: state.isVotingOpen

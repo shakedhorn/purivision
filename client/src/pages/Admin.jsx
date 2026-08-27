@@ -19,12 +19,20 @@ export default function Admin() {
     const onStateUpdate = (data) => {
       setAdminData(prev => ({...prev, isVotingOpen: data.isVotingOpen !== undefined ? data.isVotingOpen : prev.isVotingOpen}));
     };
+    
+    const onConfigUpdate = (data) => {
+      if (data.judgeCodes) {
+        setAdminData(prev => ({...prev, judgeCodes: data.judgeCodes}));
+      }
+    };
 
     socket.on('statsUpdate', onStats);
     socket.on('stateUpdate', onStateUpdate);
+    socket.on('config_update', onConfigUpdate);
     return () => {
       socket.off('statsUpdate', onStats);
       socket.off('stateUpdate', onStateUpdate);
+      socket.off('config_update', onConfigUpdate);
     };
   }, []);
 
@@ -32,6 +40,8 @@ export default function Admin() {
     socket.emit('adminAction', { type: 'generateJudgeCodes' }, (res) => {
       if (res.success) {
         setAdminData(prev => ({ ...prev, judgeCodes: res.codes }));
+        const pts = pointsStr.split(',').map(p => parseInt(p.trim())).filter(p => !isNaN(p));
+        socket.emit('admin_update_config', { songs, points: pts, judgeCodes: res.codes }, () => {});
       }
     });
   };
@@ -45,9 +55,9 @@ export default function Admin() {
   };
 
   const reset = () => {
-    if(window.confirm('סכנה! פעולה זו תמחק את כל ההצבעות! האם אתה בטוח?')) {
+    if(window.confirm('סכנה! פעולה זו תמחק את כל ההצבעות ותייצר קודי שופטים חדשים! האם אתה בטוח?')) {
       socket.emit('adminAction', { type: 'reset' }, () => {
-        alert('איפוס הושלם');
+        alert('איפוס הושלם. קודים חדשים נוצרו והשחקנים נותקו.');
         setLiveStats({ totalVotes: 0 });
       });
     }
@@ -63,7 +73,7 @@ export default function Admin() {
 
   const updateConfig = () => {
     const pts = pointsStr.split(',').map(p => parseInt(p.trim())).filter(p => !isNaN(p));
-    socket.emit('admin_update_config', { songs, points: pts }, (res) => {
+    socket.emit('admin_update_config', { songs, points: pts, judgeCodes: adminData.judgeCodes }, (res) => {
       if(res.success) alert('הגדרות עודכנו בהצלחה!');
     });
   };
@@ -84,7 +94,7 @@ export default function Admin() {
     <div className="min-h-screen bg-slate-900 p-8 text-slate-200 font-sans" dir="rtl">
       <h1 className="text-4xl font-black mb-8 text-white">לוח בקרה למנהל - purivision 2027</h1>
       
-      <div className="grid md:grid-cols-2 gap-8">
+      <div className="flex flex-col space-y-8">
         <div className="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl flex flex-col space-y-6">
           <div>
             <h2 className="text-2xl font-bold mb-4">ניהול הצבעה</h2>
@@ -115,7 +125,7 @@ export default function Admin() {
           </div>
         </div>
 
-        <div className="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl flex flex-col max-h-[800px] overflow-y-auto">
+        <div className="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl flex flex-col">
           <h2 className="text-2xl font-bold mb-4">הגדרות תחרות</h2>
           
           <div className="mb-6">
@@ -162,7 +172,7 @@ export default function Admin() {
           </button>
         </div>
 
-        <div className="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl flex flex-col md:col-span-2">
+        <div className="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl flex flex-col">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold">קודי שופטים ({adminData.judgeCodes.length})</h2>
             <button onClick={generateCodes} className="bg-purple-600 hover:bg-purple-500 px-4 py-2 rounded-lg font-bold text-sm transition shadow">

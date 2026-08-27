@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { socket } from '../socket';
 
 const CLASSES = ['ט1', 'ט2', 'י1', 'י2', 'יא1', 'יא2', 'יב', 'רמים', 'הנהלה'];
+
+const generateId = () => Date.now().toString(36) + Math.random().toString(36).substring(2);
 
 export default function Login() {
   const [role, setRole] = useState('audience');
@@ -14,24 +15,25 @@ export default function Login() {
     e.preventDefault();
     let uuid = localStorage.getItem('purivision_uuid');
     if (!uuid) {
-      uuid = crypto.randomUUID();
+      uuid = generateId();
       localStorage.setItem('purivision_uuid', uuid);
     }
     
     if (role === 'audience') {
-      if (!selectedClass || selectedClass === 'בחר כיתה...') {
-        alert('אנא בחר כיתה או הכנס קוד שופט');
+      if (!selectedClass) {
+        alert('אנא בחר כיתה');
         return;
       }
       localStorage.setItem('purivision_type', 'audience');
       localStorage.setItem('purivision_group', selectedClass);
     } else {
-      if (!code || code.trim() === '') {
-        alert('אנא בחר כיתה או הכנס קוד שופט');
+      const cleanCode = code.trim().toUpperCase();
+      if (!cleanCode) {
+        alert('אנא הכנס קוד שופט');
         return;
       }
       localStorage.setItem('purivision_type', 'judge');
-      localStorage.setItem('purivision_group', code.trim());
+      localStorage.setItem('purivision_group', cleanCode);
     }
     navigate('/vote');
   };
