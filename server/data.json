@@ -1,15 +1,136 @@
 {
   "songs": [
-    { "id": "s1", "name": "Cha Cha Cha", "artist": "Kaarija" },
-    { "id": "s2", "name": "Tattoo", "artist": "Loreen" },
-    { "id": "s3", "name": "Queen of Kings", "artist": "Alessandra" },
-    { "id": "s4", "name": "Unicorn", "artist": "Noa Kirel" },
-    { "id": "s5", "name": "SloMo", "artist": "Chanel" }
+    {
+      "id": "s1",
+      "name": "Cha Cha Cha",
+      "artist": "Kaarija"
+    },
+    {
+      "id": "s2",
+      "name": "Tattoo",
+      "artist": "Loreen"
+    },
+    {
+      "id": "s3",
+      "name": "Queen of Kings",
+      "artist": "Alessandra"
+    },
+    {
+      "id": "s4",
+      "name": "Unicorn",
+      "artist": "Noa Kirel"
+    },
+    {
+      "id": "s5",
+      "name": "SloMo",
+      "artist": "Chanel"
+    }
   ],
-  "points": [12, 10, 8, 7, 6],
-  "judgeCodes": ["JUDGE_A", "JUDGE_B"],
-  "classes": ["Class 9A", "Class 9B", "Class 10A", "Class 10B", "Class 11A", "Class 12A"],
-  "votes": {},
-  "results": null,
-  "isCalculated": false
+  "points": [
+    12,
+    10,
+    8,
+    7,
+    6
+  ],
+  "judgeCodes": [
+    "DP8D1H",
+    "5R09LA",
+    "UOZTX2",
+    "G8WA27",
+    "R59RZJ",
+    "8BCI9S",
+    "IGGA55",
+    "0UJ2RW",
+    "DWYJUJ",
+    "V3OAT0"
+  ],
+  "classes": [
+    "Class 9A",
+    "Class 9B",
+    "Class 10A",
+    "Class 10B",
+    "Class 11A",
+    "Class 12A"
+  ],
+  "votes": {
+    "c44562be-5185-412d-a53b-fdb8d073e060": {
+      "type": "judge",
+      "groupId": "DP8D1H",
+      "order": []
+    }
+  },
+  "results": [
+    {
+      "id": "s1",
+      "name": "Cha Cha Cha",
+      "artist": "Kaarija",
+      "score": 0,
+      "groupsCount": 0,
+      "frequencies": {
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "10": 0,
+        "12": 0
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Tattoo",
+      "artist": "Loreen",
+      "score": 0,
+      "groupsCount": 0,
+      "frequencies": {
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "10": 0,
+        "12": 0
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Queen of Kings",
+      "artist": "Alessandra",
+      "score": 0,
+      "groupsCount": 0,
+      "frequencies": {
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "10": 0,
+        "12": 0
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Unicorn",
+      "artist": "Noa Kirel",
+      "score": 0,
+      "groupsCount": 0,
+      "frequencies": {
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "10": 0,
+        "12": 0
+      }
+    },
+    {
+      "id": "s5",
+      "name": "SloMo",
+      "artist": "Chanel",
+      "score": 0,
+      "groupsCount": 0,
+      "frequencies": {
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "10": 0,
+        "12": 0
+      }
+    }
+  ],
+  "isCalculated": true
 }

@@ -20,44 +20,44 @@ export default function Login() {
   }, [selectedClass]);
 
   const handleLogin = () => {
-    let uuid = localStorage.getItem('purimvision_uuid');
+    let uuid = localStorage.getItem('purivision_uuid');
     if (!uuid) {
       uuid = crypto.randomUUID();
-      localStorage.setItem('purimvision_uuid', uuid);
+      localStorage.setItem('purivision_uuid', uuid);
     }
     
     if (role === 'audience') {
-      localStorage.setItem('purimvision_type', 'audience');
-      localStorage.setItem('purimvision_group', selectedClass);
+      localStorage.setItem('purivision_type', 'audience');
+      localStorage.setItem('purivision_group', selectedClass);
     } else {
-      localStorage.setItem('purimvision_type', 'judge');
-      localStorage.setItem('purimvision_group', code);
+      localStorage.setItem('purivision_type', 'judge');
+      localStorage.setItem('purivision_group', code);
     }
     navigate('/vote');
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-slate-900 text-white p-4">
-      <h1 className="text-4xl font-bold mb-8 text-purple-400">Purimvision 🎭</h1>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-slate-900 text-white p-4 font-sans">
+      <h1 className="text-4xl font-bold mb-8 text-purple-400">purivision 2027</h1>
       <div className="bg-slate-800 p-8 rounded-xl shadow-lg w-full max-w-md border border-slate-700">
         <div className="flex space-x-4 mb-6">
           <button 
-            className={`flex-1 py-2 rounded-lg font-semibold transition ${role === 'audience' ? 'bg-purple-600 shadow-[0_0_15px_rgba(147,51,234,0.5)]' : 'bg-slate-700 hover:bg-slate-600'}`}
+            className={`flex-1 py-2 rounded-lg font-semibold transition mx-2 ${role === 'audience' ? 'bg-purple-600 shadow-[0_0_15px_rgba(147,51,234,0.5)]' : 'bg-slate-700 hover:bg-slate-600'}`}
             onClick={() => setRole('audience')}
           >
-            Audience
+            קהל
           </button>
           <button 
-            className={`flex-1 py-2 rounded-lg font-semibold transition ${role === 'judge' ? 'bg-purple-600 shadow-[0_0_15px_rgba(147,51,234,0.5)]' : 'bg-slate-700 hover:bg-slate-600'}`}
+            className={`flex-1 py-2 rounded-lg font-semibold transition mx-2 ${role === 'judge' ? 'bg-purple-600 shadow-[0_0_15px_rgba(147,51,234,0.5)]' : 'bg-slate-700 hover:bg-slate-600'}`}
             onClick={() => setRole('judge')}
           >
-            Judge
+            שופט
           </button>
         </div>
         
         {role === 'audience' ? (
           <div className="mb-6">
-            <label className="block text-sm font-medium mb-2 text-slate-300">Select Your Class</label>
+            <label className="block text-sm font-medium mb-2 text-slate-300">בחר כיתה</label>
             <select 
               className="w-full bg-slate-900 border border-slate-600 p-3 rounded-lg outline-none focus:border-purple-500 transition"
               value={selectedClass}
@@ -70,13 +70,14 @@ export default function Login() {
           </div>
         ) : (
           <div className="mb-6">
-            <label className="block text-sm font-medium mb-2 text-slate-300">Judge Code</label>
+            <label className="block text-sm font-medium mb-2 text-slate-300">קוד שופט</label>
             <input 
               type="text"
-              className="w-full bg-slate-900 border border-slate-600 p-3 rounded-lg outline-none focus:border-purple-500 transition uppercase"
-              placeholder="Enter Code"
+              className="w-full bg-slate-900 border border-slate-600 p-3 rounded-lg outline-none focus:border-purple-500 transition uppercase text-left"
+              placeholder="הזן קוד"
               value={code}
               onChange={(e) => setCode(e.target.value)}
+              dir="ltr"
             />
           </div>
         )}
@@ -85,7 +86,7 @@ export default function Login() {
           onClick={handleLogin}
           className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 transition-colors p-3 rounded-lg font-bold text-lg shadow-lg"
         >
-          Enter
+          כניסה
         </button>
       </div>
     </div>
