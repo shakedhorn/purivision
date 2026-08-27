@@ -19,12 +19,13 @@ const io = new Server(server, {
 
 const dataPath = path.join(__dirname, 'data.json');
 
+const VALID_CLASSES = ['ט1', 'ט2', 'י1', 'י2', 'יא1', 'יא2', 'יב', 'רמים', 'הנהלה'];
+
 let state = {
   isVotingOpen: false,
   songs: [],
   points: [],
   judgeCodes: [],
-  classes: [],
   votes: {},
   results: null,
   isCalculated: false
@@ -34,7 +35,9 @@ let state = {
 if (fs.existsSync(dataPath)) {
   try {
     const rawData = fs.readFileSync(dataPath);
-    state = { ...state, ...JSON.parse(rawData) };
+    const parsed = JSON.parse(rawData);
+    delete parsed.classes; // Ensure classes are removed from state
+    state = { ...state, ...parsed };
     if(state.isVotingOpen === undefined) state.isVotingOpen = false;
     console.log("State loaded from data.json");
   } catch (err) {
@@ -48,7 +51,7 @@ function saveState() {
 }
 
 function calculateResults() {
-  const { songs, points, votes, classes, judgeCodes } = state;
+  const { songs, points, votes, judgeCodes } = state;
   let scores = {};
 
   songs.forEach(s => {
@@ -72,7 +75,7 @@ function calculateResults() {
   });
 
   // Process classes
-  classes.forEach(className => {
+  VALID_CLASSES.forEach(className => {
     let classVotes = {}; 
     songs.forEach(s => classVotes[s.id] = 0);
 
@@ -147,7 +150,6 @@ io.on('connection', (socket) => {
   socket.emit('stateUpdate', {
     songs: state.songs,
     points: state.points,
-    classes: state.classes,
     results: state.results,
     isCalculated: state.isCalculated,
     isVotingOpen: state.isVotingOpen
@@ -178,7 +180,7 @@ io.on('connection', (socket) => {
       }
       state.votes[uuid] = { type, groupId, order };
     } else if (type === 'audience') {
-      if (!state.classes.includes(groupId)) {
+      if (!VALID_CLASSES.includes(groupId)) {
         return callback({ success: false, error: 'כיתה לא חוקית' });
       }
       state.votes[uuid] = { type, groupId, songId };
@@ -242,7 +244,6 @@ io.on('connection', (socket) => {
       callback({
           judgeCodes: state.judgeCodes,
           totalVotes: Object.keys(state.votes).length,
-          classes: state.classes,
           points: state.points,
           songs: state.songs,
           isVotingOpen: state.isVotingOpen
