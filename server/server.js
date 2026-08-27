@@ -153,6 +153,12 @@ io.on('connection', (socket) => {
     isVotingOpen: state.isVotingOpen
   });
 
+  socket.emit('config_update', {
+    isVotingOpen: state.isVotingOpen,
+    songs: state.songs,
+    pointsArray: state.points
+  });
+
   socket.on('submitVote', (voteData, callback) => {
     if (state.isCalculated) {
       return callback({ success: false, error: 'ההצבעה הסתיימה' });
@@ -193,6 +199,7 @@ io.on('connection', (socket) => {
     state.points = data.points;
     saveState();
     io.emit('stateUpdate', { songs: state.songs, points: state.points });
+    io.emit('config_update', { isVotingOpen: state.isVotingOpen, songs: state.songs, pointsArray: state.points });
     callback({ success: true });
   });
 
@@ -200,6 +207,7 @@ io.on('connection', (socket) => {
     state.isVotingOpen = !state.isVotingOpen;
     saveState();
     io.emit('stateUpdate', { isVotingOpen: state.isVotingOpen });
+    io.emit('config_update', { isVotingOpen: state.isVotingOpen, songs: state.songs, pointsArray: state.points });
     callback({ success: true, isVotingOpen: state.isVotingOpen });
   });
 
@@ -215,6 +223,7 @@ io.on('connection', (socket) => {
       state.isVotingOpen = false;
       saveState();
       io.emit('stateUpdate', { results: state.results, isCalculated: true, isVotingOpen: false });
+      io.emit('config_update', { isVotingOpen: false, songs: state.songs, pointsArray: state.points });
       callback({ success: true });
     } else if (action.type === 'reset') {
       state.votes = {};
@@ -223,6 +232,7 @@ io.on('connection', (socket) => {
       state.isVotingOpen = false;
       saveState();
       io.emit('stateUpdate', { results: null, isCalculated: false, isVotingOpen: false });
+      io.emit('config_update', { isVotingOpen: false, songs: state.songs, pointsArray: state.points });
       io.emit('statsUpdate', { totalVotes: 0 });
       callback({ success: true });
     }

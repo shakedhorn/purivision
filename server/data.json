@@ -1,4 +1,5 @@
 {
+  "isVotingOpen": true,
   "songs": [
     {
       "id": "s1",
@@ -24,6 +25,31 @@
       "id": "s5",
       "name": "SloMo",
       "artist": "Chanel"
+    },
+    {
+      "id": "s1787851479903",
+      "name": "אבא ניבי",
+      "artist": "שמוליק"
+    },
+    {
+      "id": "s1787851500796",
+      "name": "שלום",
+      "artist": "אני"
+    },
+    {
+      "id": "s1787851517831",
+      "name": "ביי",
+      "artist": "ט2"
+    },
+    {
+      "id": "s1787851518510",
+      "name": "היי",
+      "artist": "י2"
+    },
+    {
+      "id": "s1787851518928",
+      "name": "שנופי",
+      "artist": "יא3"
     }
   ],
   "points": [
@@ -31,19 +57,24 @@
     10,
     8,
     7,
-    6
+    6,
+    5,
+    4,
+    3,
+    2,
+    1
   ],
   "judgeCodes": [
-    "DP8D1H",
-    "5R09LA",
-    "UOZTX2",
-    "G8WA27",
-    "R59RZJ",
-    "8BCI9S",
-    "IGGA55",
-    "0UJ2RW",
-    "DWYJUJ",
-    "V3OAT0"
+    "4P1ME0",
+    "C52UFN",
+    "KORCM4",
+    "ANS6P4",
+    "OPGIU9",
+    "CI9WBR",
+    "TKXMVG",
+    "FJNF8H",
+    "AVT53V",
+    "8D6ANK"
   ],
   "classes": [
     "Class 9A",
@@ -53,84 +84,7 @@
     "Class 11A",
     "Class 12A"
   ],
-  "votes": {
-    "c44562be-5185-412d-a53b-fdb8d073e060": {
-      "type": "judge",
-      "groupId": "DP8D1H",
-      "order": []
-    }
-  },
-  "results": [
-    {
-      "id": "s1",
-      "name": "Cha Cha Cha",
-      "artist": "Kaarija",
-      "score": 0,
-      "groupsCount": 0,
-      "frequencies": {
-        "6": 0,
-        "7": 0,
-        "8": 0,
-        "10": 0,
-        "12": 0
-      }
-    },
-    {
-      "id": "s2",
-      "name": "Tattoo",
-      "artist": "Loreen",
-      "score": 0,
-      "groupsCount": 0,
-      "frequencies": {
-        "6": 0,
-        "7": 0,
-        "8": 0,
-        "10": 0,
-        "12": 0
-      }
-    },
-    {
-      "id": "s3",
-      "name": "Queen of Kings",
-      "artist": "Alessandra",
-      "score": 0,
-      "groupsCount": 0,
-      "frequencies": {
-        "6": 0,
-        "7": 0,
-        "8": 0,
-        "10": 0,
-        "12": 0
-      }
-    },
-    {
-      "id": "s4",
-      "name": "Unicorn",
-      "artist": "Noa Kirel",
-      "score": 0,
-      "groupsCount": 0,
-      "frequencies": {
-        "6": 0,
-        "7": 0,
-        "8": 0,
-        "10": 0,
-        "12": 0
-      }
-    },
-    {
-      "id": "s5",
-      "name": "SloMo",
-      "artist": "Chanel",
-      "score": 0,
-      "groupsCount": 0,
-      "frequencies": {
-        "6": 0,
-        "7": 0,
-        "8": 0,
-        "10": 0,
-        "12": 0
-      }
-    }
-  ],
-  "isCalculated": true
+  "votes": {},
+  "results": null,
+  "isCalculated": false
 }

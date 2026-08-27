@@ -5,7 +5,7 @@ import { Reorder } from 'framer-motion';
 import { GripVertical } from 'lucide-react';
 
 export default function Vote() {
-  const [stateData, setStateData] = useState({ songs: [], isCalculated: false, isVotingOpen: false });
+  const [stateData, setStateData] = useState({ songs: [], isCalculated: false, isVotingOpen: null });
   const [judgeOrder, setJudgeOrder] = useState([]);
   const [voted, setVoted] = useState(false);
   const [error, setError] = useState('');
@@ -26,7 +26,11 @@ export default function Vote() {
     }
 
     const onStateUpdate = (data) => {
-      setStateData(data);
+      setStateData(prev => ({ ...prev, ...data }));
+    };
+
+    const onConfigUpdate = (data) => {
+      setStateData(prev => ({ ...prev, isVotingOpen: data.isVotingOpen, songs: data.songs }));
       if (type === 'judge' && data.songs && data.songs.length > 0) {
         setJudgeOrder(prev => {
           if (prev.length === data.songs.length) return prev;
@@ -36,7 +40,12 @@ export default function Vote() {
     };
 
     socket.on('stateUpdate', onStateUpdate);
-    return () => socket.off('stateUpdate', onStateUpdate);
+    socket.on('config_update', onConfigUpdate);
+    
+    return () => {
+      socket.off('stateUpdate', onStateUpdate);
+      socket.off('config_update', onConfigUpdate);
+    };
   }, [navigate, type, groupId, uuid]);
 
   const submitAudienceVote = (songId) => {
@@ -60,6 +69,11 @@ export default function Vote() {
       }
     });
   };
+
+  // Wait for socket payload
+  if (stateData.isVotingOpen === null) {
+      return <div className="min-h-screen bg-slate-900 flex items-center justify-center text-white"><div className="text-xl">טוען נתונים...</div></div>;
+  }
 
   if (!stateData.isVotingOpen || stateData.isCalculated) {
     return <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center text-center p-4">
