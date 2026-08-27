@@ -1,5 +1,5 @@
 {
-  "isVotingOpen": true,
+  "isVotingOpen": false,
   "songs": [
     {
       "id": "s1",
@@ -65,16 +65,16 @@
     1
   ],
   "judgeCodes": [
-    "4P1ME0",
-    "C52UFN",
-    "KORCM4",
-    "ANS6P4",
-    "OPGIU9",
-    "CI9WBR",
-    "TKXMVG",
-    "FJNF8H",
-    "AVT53V",
-    "8D6ANK"
+    "GLBYJD",
+    "QLVHS2",
+    "59L7WW",
+    "K4GVE7",
+    "E7CZ15",
+    "UV1228",
+    "RCYBMR",
+    "V71CBU",
+    "S8I5TL",
+    "QCOYO2"
   ],
   "classes": [
     "Class 9A",
@@ -84,7 +84,215 @@
     "Class 11A",
     "Class 12A"
   ],
-  "votes": {},
-  "results": null,
-  "isCalculated": false
+  "votes": {
+    "f5e39ae7-1325-472b-ad14-3de81b84c85e": {
+      "type": "judge",
+      "groupId": "E7CZ15",
+      "order": [
+        "s4",
+        "s1787851479903",
+        "s5",
+        "s2",
+        "s3",
+        "s1787851500796",
+        "s1",
+        "s1787851517831",
+        "s1787851518510",
+        "s1787851518928"
+      ]
+    }
+  },
+  "results": [
+    {
+      "id": "s4",
+      "name": "Unicorn",
+      "artist": "Noa Kirel",
+      "score": 12,
+      "groupsCount": 1,
+      "frequencies": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "10": 0,
+        "12": 1
+      }
+    },
+    {
+      "id": "s1787851479903",
+      "name": "אבא ניבי",
+      "artist": "שמוליק",
+      "score": 10,
+      "groupsCount": 1,
+      "frequencies": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "10": 1,
+        "12": 0
+      }
+    },
+    {
+      "id": "s5",
+      "name": "SloMo",
+      "artist": "Chanel",
+      "score": 8,
+      "groupsCount": 1,
+      "frequencies": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 1,
+        "10": 0,
+        "12": 0
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Tattoo",
+      "artist": "Loreen",
+      "score": 7,
+      "groupsCount": 1,
+      "frequencies": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 1,
+        "8": 0,
+        "10": 0,
+        "12": 0
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Queen of Kings",
+      "artist": "Alessandra",
+      "score": 6,
+      "groupsCount": 1,
+      "frequencies": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 1,
+        "7": 0,
+        "8": 0,
+        "10": 0,
+        "12": 0
+      }
+    },
+    {
+      "id": "s1787851500796",
+      "name": "שלום",
+      "artist": "אני",
+      "score": 5,
+      "groupsCount": 1,
+      "frequencies": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "10": 0,
+        "12": 0
+      }
+    },
+    {
+      "id": "s1",
+      "name": "Cha Cha Cha",
+      "artist": "Kaarija",
+      "score": 4,
+      "groupsCount": 1,
+      "frequencies": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 1,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "10": 0,
+        "12": 0
+      }
+    },
+    {
+      "id": "s1787851517831",
+      "name": "ביי",
+      "artist": "ט2",
+      "score": 3,
+      "groupsCount": 1,
+      "frequencies": {
+        "1": 0,
+        "2": 0,
+        "3": 1,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "10": 0,
+        "12": 0
+      }
+    },
+    {
+      "id": "s1787851518510",
+      "name": "היי",
+      "artist": "י2",
+      "score": 2,
+      "groupsCount": 1,
+      "frequencies": {
+        "1": 0,
+        "2": 1,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "10": 0,
+        "12": 0
+      }
+    },
+    {
+      "id": "s1787851518928",
+      "name": "שנופי",
+      "artist": "יא3",
+      "score": 1,
+      "groupsCount": 1,
+      "frequencies": {
+        "1": 1,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "10": 0,
+        "12": 0
+      }
+    }
+  ],
+  "isCalculated": true
 }

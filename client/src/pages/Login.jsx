@@ -2,22 +2,13 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { socket } from '../socket';
 
+const CLASSES = ['ט1', 'ט2', 'י1', 'י2', 'יא1', 'יא2', 'יב', 'רמים', 'הנהלה'];
+
 export default function Login() {
   const [role, setRole] = useState('audience');
   const [code, setCode] = useState('');
   const [selectedClass, setSelectedClass] = useState('');
-  const [classes, setClasses] = useState([]);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    socket.on('stateUpdate', (data) => {
-      setClasses(data.classes || []);
-      if(data.classes && data.classes.length > 0 && !selectedClass) {
-          setSelectedClass(data.classes[0]);
-      }
-    });
-    return () => socket.off('stateUpdate');
-  }, [selectedClass]);
 
   const handleLogin = () => {
     let uuid = localStorage.getItem('purivision_uuid');
@@ -27,9 +18,17 @@ export default function Login() {
     }
     
     if (role === 'audience') {
+      if (!selectedClass) {
+        alert('אנא בחר כיתה');
+        return;
+      }
       localStorage.setItem('purivision_type', 'audience');
       localStorage.setItem('purivision_group', selectedClass);
     } else {
+      if (!code) {
+        alert('אנא הזן קוד שופט');
+        return;
+      }
       localStorage.setItem('purivision_type', 'judge');
       localStorage.setItem('purivision_group', code);
     }
@@ -62,8 +61,10 @@ export default function Login() {
               className="w-full bg-slate-900 border border-slate-600 p-3 rounded-lg outline-none focus:border-purple-500 transition"
               value={selectedClass}
               onChange={(e) => setSelectedClass(e.target.value)}
+              dir="rtl"
             >
-              {classes.map(c => (
+              <option value="" disabled>בחר כיתה...</option>
+              {CLASSES.map(c => (
                 <option key={c} value={c}>{c}</option>
               ))}
             </select>
@@ -84,7 +85,7 @@ export default function Login() {
 
         <button 
           onClick={handleLogin}
-          className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 transition-colors p-3 rounded-lg font-bold text-lg shadow-lg"
+          className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 transition-colors p-3 rounded-lg font-bold text-lg shadow-lg mt-2"
         >
           כניסה
         </button>
