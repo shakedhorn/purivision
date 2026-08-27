@@ -1,0 +1,15 @@
+{
+  "songs": [
+    { "id": "s1", "name": "Cha Cha Cha", "artist": "Kaarija" },
+    { "id": "s2", "name": "Tattoo", "artist": "Loreen" },
+    { "id": "s3", "name": "Queen of Kings", "artist": "Alessandra" },
+    { "id": "s4", "name": "Unicorn", "artist": "Noa Kirel" },
+    { "id": "s5", "name": "SloMo", "artist": "Chanel" }
+  ],
+  "points": [12, 10, 8, 7, 6],
+  "judgeCodes": ["JUDGE_A", "JUDGE_B"],
+  "classes": ["Class 9A", "Class 9B", "Class 10A", "Class 10B", "Class 11A", "Class 12A"],
+  "votes": {},
+  "results": null,
+  "isCalculated": false
+}
