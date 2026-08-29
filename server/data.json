@@ -2,295 +2,39 @@
   "isVotingOpen": false,
   "songs": [
     {
-      "id": "s1",
-      "name": "Cha Cha Cha",
-      "artist": "Kaarija"
+      "id": "s1788032324032",
+      "name": "1",
+      "artist": "1"
     },
     {
-      "id": "s2",
-      "name": "לשלמה הגמל",
-      "artist": "הנחל"
+      "id": "s1788032324475",
+      "name": "2",
+      "artist": "2"
     },
     {
-      "id": "s3",
-      "name": "Queen of Kings",
-      "artist": "Alessandra"
-    },
-    {
-      "id": "s4",
-      "name": "Unicorn",
-      "artist": "Noa Kirel"
-    },
-    {
-      "id": "s5",
-      "name": "SloMo",
-      "artist": "Chanel"
-    },
-    {
-      "id": "s1787851479903",
-      "name": "אבא ניבי",
-      "artist": "שמוליק"
-    },
-    {
-      "id": "s1787851500796",
-      "name": "שלום",
-      "artist": "אני"
-    },
-    {
-      "id": "s1787851517831",
-      "name": "ביי",
-      "artist": "ט2"
-    },
-    {
-      "id": "s1787851518510",
-      "name": "היי",
-      "artist": "י2"
-    },
-    {
-      "id": "s1787851518928",
-      "name": "שנופי",
-      "artist": "יא3"
+      "id": "s1788032324909",
+      "name": "3",
+      "artist": "3"
     }
   ],
   "points": [
-    12,
-    10,
-    8,
-    7,
-    6,
-    5,
-    4,
-    3,
     2,
-    1
+    1,
+    0
   ],
   "judgeCodes": [
-    "FE0NZR",
-    "B1W8O7",
-    "EV14BT",
-    "X1ILB6",
-    "959NGA",
-    "ORJMF2",
-    "VN80G2",
-    "7IMTVE",
-    "41R8TA",
-    "K1UC9O"
+    "M9OOVY",
+    "BQTVKT",
+    "04K30T",
+    "NJMBKW",
+    "4W5ME9",
+    "6MNLKZ",
+    "5B2E49",
+    "MILP0I",
+    "L6TW9K",
+    "AZM6Z7"
   ],
-  "votes": {
-    "f5e39ae7-1325-472b-ad14-3de81b84c85e": {
-      "type": "judge",
-      "groupId": "959NGA",
-      "order": [
-        "s1787851518928",
-        "s2",
-        "s1787851479903",
-        "s1",
-        "s1787851500796",
-        "s3",
-        "s4",
-        "s1787851517831",
-        "s5",
-        "s1787851518510"
-      ]
-    },
-    "959NGA": true,
-    "mtbw16sy79ia804f0wv": {
-      "type": "audience",
-      "groupId": "ט1",
-      "songId": "s1787851479903"
-    }
-  },
-  "results": [
-    {
-      "id": "s1787851479903",
-      "name": "אבא ניבי",
-      "artist": "שמוליק",
-      "score": 20,
-      "groupsCount": 2,
-      "frequencies": {
-        "1": 0,
-        "2": 0,
-        "3": 0,
-        "4": 0,
-        "5": 0,
-        "6": 0,
-        "7": 0,
-        "8": 1,
-        "10": 0,
-        "12": 1
-      }
-    },
-    {
-      "id": "s1787851518928",
-      "name": "שנופי",
-      "artist": "יא3",
-      "score": 12,
-      "groupsCount": 1,
-      "frequencies": {
-        "1": 0,
-        "2": 0,
-        "3": 0,
-        "4": 0,
-        "5": 0,
-        "6": 0,
-        "7": 0,
-        "8": 0,
-        "10": 0,
-        "12": 1
-      }
-    },
-    {
-      "id": "s2",
-      "name": "לשלמה הגמל",
-      "artist": "הנחל",
-      "score": 10,
-      "groupsCount": 1,
-      "frequencies": {
-        "1": 0,
-        "2": 0,
-        "3": 0,
-        "4": 0,
-        "5": 0,
-        "6": 0,
-        "7": 0,
-        "8": 0,
-        "10": 1,
-        "12": 0
-      }
-    },
-    {
-      "id": "s1",
-      "name": "Cha Cha Cha",
-      "artist": "Kaarija",
-      "score": 7,
-      "groupsCount": 1,
-      "frequencies": {
-        "1": 0,
-        "2": 0,
-        "3": 0,
-        "4": 0,
-        "5": 0,
-        "6": 0,
-        "7": 1,
-        "8": 0,
-        "10": 0,
-        "12": 0
-      }
-    },
-    {
-      "id": "s1787851500796",
-      "name": "שלום",
-      "artist": "אני",
-      "score": 6,
-      "groupsCount": 1,
-      "frequencies": {
-        "1": 0,
-        "2": 0,
-        "3": 0,
-        "4": 0,
-        "5": 0,
-        "6": 1,
-        "7": 0,
-        "8": 0,
-        "10": 0,
-        "12": 0
-      }
-    },
-    {
-      "id": "s3",
-      "name": "Queen of Kings",
-      "artist": "Alessandra",
-      "score": 5,
-      "groupsCount": 1,
-      "frequencies": {
-        "1": 0,
-        "2": 0,
-        "3": 0,
-        "4": 0,
-        "5": 1,
-        "6": 0,
-        "7": 0,
-        "8": 0,
-        "10": 0,
-        "12": 0
-      }
-    },
-    {
-      "id": "s4",
-      "name": "Unicorn",
-      "artist": "Noa Kirel",
-      "score": 4,
-      "groupsCount": 1,
-      "frequencies": {
-        "1": 0,
-        "2": 0,
-        "3": 0,
-        "4": 1,
-        "5": 0,
-        "6": 0,
-        "7": 0,
-        "8": 0,
-        "10": 0,
-        "12": 0
-      }
-    },
-    {
-      "id": "s1787851517831",
-      "name": "ביי",
-      "artist": "ט2",
-      "score": 3,
-      "groupsCount": 1,
-      "frequencies": {
-        "1": 0,
-        "2": 0,
-        "3": 1,
-        "4": 0,
-        "5": 0,
-        "6": 0,
-        "7": 0,
-        "8": 0,
-        "10": 0,
-        "12": 0
-      }
-    },
-    {
-      "id": "s5",
-      "name": "SloMo",
-      "artist": "Chanel",
-      "score": 2,
-      "groupsCount": 1,
-      "frequencies": {
-        "1": 0,
-        "2": 1,
-        "3": 0,
-        "4": 0,
-        "5": 0,
-        "6": 0,
-        "7": 0,
-        "8": 0,
-        "10": 0,
-        "12": 0
-      }
-    },
-    {
-      "id": "s1787851518510",
-      "name": "היי",
-      "artist": "י2",
-      "score": 1,
-      "groupsCount": 1,
-      "frequencies": {
-        "1": 1,
-        "2": 0,
-        "3": 0,
-        "4": 0,
-        "5": 0,
-        "6": 0,
-        "7": 0,
-        "8": 0,
-        "10": 0,
-        "12": 0
-      }
-    }
-  ],
-  "isCalculated": true
+  "votes": {},
+  "results": null,
+  "isCalculated": false
 }
