@@ -1,5 +1,5 @@
 {
-  "isVotingOpen": false,
+  "isVotingOpen": true,
   "songs": [
     {
       "id": "s1788032324032",
@@ -23,16 +23,16 @@
     0
   ],
   "judgeCodes": [
-    "M9OOVY",
-    "BQTVKT",
-    "04K30T",
-    "NJMBKW",
-    "4W5ME9",
-    "6MNLKZ",
-    "5B2E49",
-    "MILP0I",
-    "L6TW9K",
-    "AZM6Z7"
+    "Z4FQCI",
+    "2RZMW8",
+    "81RZXW",
+    "GV5SDK",
+    "XYU608",
+    "AM6C74",
+    "XSM1TC",
+    "SD2O80",
+    "R8U9X0",
+    "BL6B2F"
   ],
   "votes": {},
   "results": null,
