@@ -161,11 +161,11 @@ function isSocketAuthorized(socket, payload) {
 }
 
 // REST API Endpoints
-app.get('/', (req, res) => {
-  res.status(200).json({ status: 'ok', name: 'PuriVision Server', version: '1.0.0' });
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok', uptime: process.uptime(), timestamp: new Date().toISOString() });
 });
 
-app.get('/health', (req, res) => {
+app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok', uptime: process.uptime(), timestamp: new Date().toISOString() });
 });
 
@@ -219,6 +219,32 @@ app.get('/api/results', (req, res) => {
     results: state.results
   });
 });
+
+// Serve static files from the React client build directory
+const clientDistPath = path.join(__dirname, '../client/dist');
+const indexPath = path.join(clientDistPath, 'index.html');
+
+app.use(express.static(clientDistPath));
+
+// Catch-all route to serve React's index.html for any unrecognized routes (React Router)
+const serveIndexHtml = (req, res) => {
+  if (req.path.startsWith('/api/')) {
+    return res.status(404).json({ success: false, error: 'API endpoint not found' });
+  }
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    res.status(200).send('PuriVision Server is running, but client/dist/index.html was not found. Please build the client using "npm run build".');
+  }
+};
+
+try {
+  // Express 5 wildcard syntax
+  app.get('{*path}', serveIndexHtml);
+} catch (e) {
+  // Fallback for Express 4
+  app.get('*', serveIndexHtml);
+}
 
 // Voting Logic & State Management
 const dataPath = path.join(__dirname, 'data.json');
