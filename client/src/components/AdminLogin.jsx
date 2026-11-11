@@ -85,7 +85,7 @@ export default function AdminLogin({ onLoginSuccess }) {
               <label className="block text-sm font-semibold mb-2 text-slate-300">
                 שם משתמש
               </label>
-              <div className="relative">
+              <div className="relative flex items-center">
                 <input
                   type="text"
                   required
@@ -94,7 +94,7 @@ export default function AdminLogin({ onLoginSuccess }) {
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="הזן שם משתמש מנהל"
                   dir="ltr"
-                  className="w-full bg-slate-900/90 border border-slate-600/80 focus:border-purple-500 p-3.5 rounded-xl outline-none transition text-white placeholder-slate-500 text-left font-mono"
+                  className="w-full bg-slate-900/90 border border-slate-600/80 focus:border-purple-500 py-3.5 pl-3.5 pr-3.5 rounded-xl outline-none transition text-white placeholder-slate-500 text-left font-mono leading-normal"
                 />
               </div>
             </div>
@@ -103,7 +103,7 @@ export default function AdminLogin({ onLoginSuccess }) {
               <label className="block text-sm font-semibold mb-2 text-slate-300">
                 סיסמה
               </label>
-              <div className="relative">
+              <div className="relative flex items-center">
                 <input
                   type={showPassword ? 'text' : 'password'}
                   required
@@ -111,15 +111,16 @@ export default function AdminLogin({ onLoginSuccess }) {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
                   dir="ltr"
-                  className="w-full bg-slate-900/90 border border-slate-600/80 focus:border-purple-500 p-3.5 rounded-xl outline-none transition text-white placeholder-slate-500 text-left pr-10 font-mono"
+                  className="w-full bg-slate-900/90 border border-slate-600/80 focus:border-purple-500 py-3.5 pl-11 pr-3.5 rounded-xl outline-none transition text-white placeholder-slate-500 text-left font-mono leading-normal"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 p-1 transition"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 text-slate-400 hover:text-slate-200 transition focus:outline-none cursor-pointer"
                   tabIndex={-1}
+                  aria-label={showPassword ? 'הסתר סיסמה' : 'הצג סיסמה'}
                 >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showPassword ? <EyeOff className="w-5 h-5 block" /> : <Eye className="w-5 h-5 block" />}
                 </button>
               </div>
             </div>

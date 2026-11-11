@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
-import { socket } from '../socket';
+import { socket, BACKEND_URL } from '../socket';
 import AdminLogin from '../components/AdminLogin';
-import { LogOut, ShieldCheck, RefreshCw } from 'lucide-react';
+import { LogOut, ShieldCheck, RefreshCw, Activity } from 'lucide-react';
 
 export default function Admin() {
   const [token, setToken] = useState(() => sessionStorage.getItem('purivision_admin_token'));
@@ -14,11 +14,16 @@ export default function Admin() {
   const [pointsStr, setPointsStr] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  // Keep-Alive Ping State (to prevent Render free tier from sleeping)
+  const [isKeepAliveActive, setIsKeepAliveActive] = useState(false);
+  const [lastPingTime, setLastPingTime] = useState(null);
+
   const handleLogout = useCallback(() => {
     sessionStorage.removeItem('purivision_admin_token');
     sessionStorage.removeItem('purivision_admin_username');
     setToken(null);
     setIsAuthenticated(false);
+    setIsKeepAliveActive(false);
   }, []);
 
   const loadAdminData = useCallback((authToken) => {
@@ -89,6 +94,32 @@ export default function Admin() {
       socket.off('config_update', onConfigUpdate);
     };
   }, [isAuthenticated, token, loadAdminData]);
+
+  // Keep-Alive Effect: Sends GET request to /health every 10 minutes when activated
+  useEffect(() => {
+    if (!isKeepAliveActive) return;
+
+    const sendKeepAlivePing = async () => {
+      try {
+        const res = await fetch(`${BACKEND_URL}/health`);
+        if (res.ok) {
+          const now = new Date();
+          const formattedTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+          setLastPingTime(formattedTime);
+        }
+      } catch (err) {
+        console.warn('Keep-alive ping to /health failed:', err);
+      }
+    };
+
+    // Send an immediate ping upon activation
+    sendKeepAlivePing();
+
+    // Schedule periodic ping every 10 minutes (600,000 ms)
+    const intervalId = setInterval(sendKeepAlivePing, 10 * 60 * 1000);
+
+    return () => clearInterval(intervalId);
+  }, [isKeepAliveActive]);
 
   const handleLoginSuccess = (newToken) => {
     setToken(newToken);
@@ -193,20 +224,49 @@ export default function Admin() {
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Keep Server Awake Toggle Button */}
+          <button
+            onClick={() => setIsKeepAliveActive(prev => !prev)}
+            className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition border cursor-pointer ${
+              isKeepAliveActive
+                ? 'bg-emerald-950/70 border-emerald-500/60 text-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.3)] hover:bg-emerald-900/80'
+                : 'bg-slate-700/80 border-slate-600/70 text-slate-300 hover:bg-slate-700'
+            }`}
+            title={
+              isKeepAliveActive
+                ? `מניעת שינה פעילה - שולח פינג ל-/health כל 10 דקות${lastPingTime ? ` (פינג אחרון: ${lastPingTime})` : ''}`
+                : 'הפעל מניעת שינה לשרת Render (שולח פינג ל-/health כל 10 דקות)'
+            }
+          >
+            <span className="relative flex h-2.5 w-2.5">
+              {isKeepAliveActive && (
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              )}
+              <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${isKeepAliveActive ? 'bg-emerald-400' : 'bg-slate-500'}`}></span>
+            </span>
+            <Activity className={`w-4 h-4 ${isKeepAliveActive ? 'text-emerald-400' : 'text-slate-400'}`} />
+            <span>{isKeepAliveActive ? 'Keep Server Awake: ON' : 'Keep Server Awake: OFF'}</span>
+            {isKeepAliveActive && lastPingTime && (
+              <span className="text-[10px] text-emerald-400/80 font-mono hidden md:inline">({lastPingTime})</span>
+            )}
+          </button>
+
+          {/* Refresh Data Button */}
           <button
             onClick={() => loadAdminData(token)}
             disabled={isLoading}
-            className="flex items-center gap-2 px-3 py-2 bg-slate-700/80 hover:bg-slate-600 text-slate-200 rounded-xl text-sm font-semibold transition"
+            className="flex items-center gap-2 px-3 py-2 bg-slate-700/80 hover:bg-slate-600 text-slate-200 rounded-xl text-xs sm:text-sm font-semibold transition cursor-pointer"
             title="רענן נתונים"
           >
             <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
             <span>רענן</span>
           </button>
 
+          {/* Logout Button */}
           <button
             onClick={handleLogout}
-            className="flex items-center gap-2 px-4 py-2 bg-red-950/60 hover:bg-red-900/80 border border-red-800/80 text-red-200 rounded-xl text-sm font-semibold transition shadow"
+            className="flex items-center gap-2 px-4 py-2 bg-red-950/60 hover:bg-red-900/80 border border-red-800/80 text-red-200 rounded-xl text-xs sm:text-sm font-semibold transition shadow cursor-pointer"
           >
             <LogOut className="w-4 h-4" />
             <span>התנתק</span>

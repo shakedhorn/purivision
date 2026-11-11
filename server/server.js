@@ -405,6 +405,7 @@ io.on('connection', (socket) => {
       isVotingOpen: state.isVotingOpen,
       songs: state.songs,
       pointsArray: state.points,
+      judgeCodes: state.judgeCodes,
       hasVoted: !!state.votes[userId]
     });
   });
